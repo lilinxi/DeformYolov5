@@ -234,10 +234,10 @@ def stereo_conv2d(
         os.makedirs(cache_dir)
     if os.path.exists(cache_file):
         with open(cache_file, 'rb') as f:
-            offset = torch.from_numpy(pickle.load(f))
+            offset = torch.from_numpy(pickle.load(f)).to(input.device).type(input.dtype)
     else:
         offset = compute_offset(offset, bs)
-        pickle.dump(offset.numpy(), open(cache_file, 'wb'))
+        pickle.dump(offset.cpu().numpy(), open(cache_file, 'wb'))
 
     return deform_conv2d(input, offset, weight, bias, stride, padding, dilation, mask)
 

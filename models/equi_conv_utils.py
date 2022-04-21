@@ -158,11 +158,11 @@ def equi_conv2d(input, weight, bias=None, stride=(1, 1), padding=(0, 0), dilatio
         os.makedirs(cache_dir)
     if os.path.exists(cache_file):
         with open(cache_file, 'rb') as f:
-            offset = torch.from_numpy(pickle.load(f))
+            offset = torch.from_numpy(pickle.load(f)).to(input.device).type(input.dtype)
     else:
         offset = distortion_aware_map(pano_W, pano_H, weights_w, weights_h,
                                       s_width=stride_w, s_height=stride_h, bs=bs)
-        pickle.dump(offset.numpy(), open(cache_file, 'wb'))
+        pickle.dump(offset.cpu().numpy(), open(cache_file, 'wb'))
 
     return deform_conv2d(input, offset, weight, bias=bias, stride=stride, padding=padding, dilation=dilation)
 
