@@ -176,15 +176,15 @@ def stereo_conv2d(
         bias = bias.to(input.device)
 
     stride_h, stride_w = _pair(stride)
-    if stride_h != stride_w or stride_h != 1:
-        raise ValueError("stride_h must be 1 and equals stride_w, not support yet")
+    # if stride_h != stride_w or stride_h != 1:
+    #     raise ValueError("stride_h must be 1 and equals stride_w, not support yet")
     pad_h, pad_w = _pair(padding)
     dil_h, dil_w = _pair(dilation)
-    if dil_h != dil_w or dil_h != 1:
-        raise ValueError("dil_h must be 1 and equals dil_w, not support yet")
+    # if dil_h != dil_w or dil_h != 1:
+    #     raise ValueError("dil_h must be 1 and equals dil_w, not support yet")
     kernel_height, kernel_width = weight.shape[-2:]  # [output_channels, input_channels, kernel_h, kernel_w]
-    if kernel_height != kernel_width or kernel_height != 3:
-        raise ValueError("kernel_height must be 3 and equals kernel_width, not support yet")
+    # if kernel_height != kernel_width or kernel_height != 3:
+    #     raise ValueError("kernel_height must be 3 and equals kernel_width, not support yet")
     bs, n_in_channels, in_h, in_w = input.shape  # [batch_size, input_channels, input_height, input_width]
 
     out_width = int((in_w + 2 * pad_w - dil_w * (kernel_width - 1) - 1) // stride_w + 1)
@@ -194,7 +194,7 @@ def stereo_conv2d(
     offset = torch.zeros(2 * kernel_height * kernel_width, out_height, out_width,
                          device=input.device, dtype=input.dtype)
 
-    def compute_offset(offset):
+    def compute_offset(offset, bs):
         for dh in range(0, out_height, stride_h):
             for dw in range(0, out_width, stride_w):
                 logging.debug(f'{dh}, {dw}')
@@ -218,6 +218,7 @@ def stereo_conv2d(
         return offset
 
     offset_index_tuple = (
+        bs,
         in_h, in_w,
         kernel_height, kernel_width,
         stride_h, stride_w,
@@ -235,7 +236,7 @@ def stereo_conv2d(
         with open(cache_file, 'rb') as f:
             offset = torch.from_numpy(pickle.load(f))
     else:
-        offset = compute_offset(offset)
+        offset = compute_offset(offset, bs)
         pickle.dump(offset.numpy(), open(cache_file, 'wb'))
 
     return deform_conv2d(input, offset, weight, bias, stride, padding, dilation, mask)
@@ -252,7 +253,8 @@ class StereoConv2d(nn.Module):
             dilation: _size_2_t = 1,
             groups: int = 1,
             bias: bool = True,
-            proj_params: proto_gen.detect_pb2.StereoProjectParams = proto_gen.detect_pb2.StereoProjectParams(project_dis=1, project_size=3),
+            proj_params: proto_gen.detect_pb2.StereoProjectParams = proto_gen.detect_pb2.StereoProjectParams(
+                project_dis=1, project_size=3),
             projXY2panoXYZFunc: callable = proj.stereo_proj._projXY2panoXYZ,
             panoXYZ2projXYFunc: callable = proj.stereo_proj._panoXYZ2projXY,
             thetaRate: float = 1.0,  # 默认 detTheta = proj_theta / proj_size, 可调整 detTheta = detTheta * thetaRate

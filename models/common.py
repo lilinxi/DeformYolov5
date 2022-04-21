@@ -27,6 +27,8 @@ from utils.general import (LOGGER, check_requirements, check_suffix, check_versi
 from utils.plots import Annotator, colors, save_one_box
 from utils.torch_utils import copy_attr, time_sync
 
+import models.deform_conv_utils
+
 
 def autopad(k, p=None):  # kernel, padding
     # Pad to 'same'

@@ -267,7 +267,7 @@ def parse_model(d, ch):  # model_dict, input_channels(3)
 
         n = n_ = max(round(n * gd), 1) if n > 1 else n  # depth gain
         if m in (
-                DeformConvV1V2_4uiiurz1,
+                DeformConvV1_TorchVision, EquiConv, StereoConv,
                 Conv, GhostConv, Bottleneck, GhostBottleneck, SPP, SPPF, DWConv, MixConv2d, Focus, CrossConv,
                 BottleneckCSP, C3, C3TR, C3SPP, C3Ghost):
             c1, c2 = ch[f], args[0]
