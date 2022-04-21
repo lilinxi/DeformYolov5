@@ -105,7 +105,7 @@ def equi_conv2d(input, weight, bias=None, stride=(1, 1), padding=(0, 0), dilatio
         K = torch.tensor([[focal, 0, c_x], [0, focal, c_y], [0., 0., 1.]], device=input.device, dtype=input.dtype)
         # inv_K = torch.inverse(K)
         inv_K = torch.from_numpy(
-            np.linalg.inv(K.cpu().numpy())
+            np.linalg.inv(K.cpu().numpy().astype(np.float32))
         ).to(input.device).astype(input.dtype)
         rays = torch.stack([w_grid, h_grid, torch.ones(h_grid.shape, device=input.device, dtype=input.dtype)], 0)
         rays = torch.matmul(inv_K, rays.reshape(3, k_H * k_W))
