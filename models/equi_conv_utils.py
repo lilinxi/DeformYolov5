@@ -3,6 +3,7 @@ import pickle
 import hashlib
 import math
 
+import numpy as np
 import torch
 from torch import nn, Tensor
 from torch.nn import init
@@ -102,7 +103,10 @@ def equi_conv2d(input, weight, bias=None, stride=(1, 1), padding=(0, 0), dilatio
         w_grid = torch.matmul(torch.unsqueeze(h_ones, -1), torch.unsqueeze(w_range, 0)) + 0.5 - float(k_W) / 2
 
         K = torch.tensor([[focal, 0, c_x], [0, focal, c_y], [0., 0., 1.]], device=input.device, dtype=input.dtype)
-        inv_K = torch.inverse(K)
+        # inv_K = torch.inverse(K)
+        inv_K = torch.from_numpy(
+            np.linalg.inv(K.numpy())
+        ).to(input.device).astype(input.dtype)
         rays = torch.stack([w_grid, h_grid, torch.ones(h_grid.shape, device=input.device, dtype=input.dtype)], 0)
         rays = torch.matmul(inv_K, rays.reshape(3, k_H * k_W))
         rays /= torch.norm(rays, dim=0, keepdim=True)
