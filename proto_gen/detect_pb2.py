@@ -14,10 +14,17 @@ _sym_db = _symbol_database.Default()
 
 
 class StereoProjectParams(object):
-    def __init__(self, project_dis, project_size, theta_rotate):
+    def __init__(self, project_dis, project_size, theta_rotate=0):
         self.project_dis = project_dis
         self.project_size = project_size
         self.theta_rotate = theta_rotate
+
+    def __str__(self):
+        return "project_dis: %f, project_size: %f, theta_rotate: %f" % (
+            self.project_dis, self.project_size, self.theta_rotate)
+
+    def SerializeToString(self):
+        return self.__str__()
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
