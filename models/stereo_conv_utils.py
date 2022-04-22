@@ -34,7 +34,6 @@ def compute_kernel_offset(
         kernel_height, kernel_width,
         dil_h, dil_w,
         proj_params,
-        projXY2panoXYZFunc, panoXYZ2projXYFunc,
         thetaRate,
         device, dtype,
         absolute=False,
@@ -53,7 +52,7 @@ def compute_kernel_offset(
     kernel_offset_y = torch.zeros(kernel_height, kernel_width, device=device, dtype=dtype)
 
     # 计算卷积核中心的位置
-    raw_x, raw_y, raw_z = projXY2panoXYZFunc(output_X_normal, output_Y_normal, proj_params=proj_params)
+    raw_x, raw_y, raw_z = proj.stereo_proj._projXY2panoXYZ(output_X_normal, output_Y_normal, proj_params=proj_params)
     center_theta, center_phi = proj.transform.xyz2theta_phi(raw_x, raw_y, raw_z)
 
     # 计算整个卷积核的偏移量
@@ -66,7 +65,7 @@ def compute_kernel_offset(
             offset_phi = center_phi + raw_kernel_h * delta_phi
 
             offset_x, offset_y, offset_z = proj.transform.theta_phi2xyz(offset_theta, offset_phi)
-            offset_X, offset_Y, _ = panoXYZ2projXYFunc(offset_x, offset_y, offset_z, proj_params=proj_params)
+            offset_X, offset_Y, _ = proj.stereo_proj._panoXYZ2projXY(offset_x, offset_y, offset_z, proj_params=proj_params)
 
             if absolute:  # 绝对偏移量，相对于中心
                 kernel_offset_x[i, j] = (offset_X - output_X_normal) * out_width
@@ -95,7 +94,6 @@ def plot_kernel_offset(proj_req: proto_gen.detect_pb2.StereoProjectRequest):
         kernel_height=7, kernel_width=7,
         dil_h=1, dil_w=1,
         proj_params=proj_req.project_params_list[0],
-        projXY2panoXYZFunc=proj.stereo_proj._projXY2panoXYZ, panoXYZ2projXYFunc=proj.stereo_proj._panoXYZ2projXY,
         thetaRate=5.0,
         device='cpu', dtype=torch.float32,
         absolute=True,
@@ -115,7 +113,6 @@ def plot_kernel_offset(proj_req: proto_gen.detect_pb2.StereoProjectRequest):
         kernel_height=3, kernel_width=3,
         dil_h=2, dil_w=2,
         proj_params=proj_req.project_params_list[0],
-        projXY2panoXYZFunc=proj.stereo_proj._projXY2panoXYZ, panoXYZ2projXYFunc=proj.stereo_proj._panoXYZ2projXY,
         thetaRate=1.0,
         device='cpu', dtype=torch.float32,
         absolute=True,
@@ -135,7 +132,6 @@ def plot_kernel_offset(proj_req: proto_gen.detect_pb2.StereoProjectRequest):
         kernel_height=3, kernel_width=3,
         dil_h=3, dil_w=3,
         proj_params=proj_req.project_params_list[0],
-        projXY2panoXYZFunc=proj.stereo_proj._projXY2panoXYZ, panoXYZ2projXYFunc=proj.stereo_proj._panoXYZ2projXY,
         thetaRate=1.0,
         device='cpu', dtype=torch.float32,
         absolute=True,
@@ -163,8 +159,6 @@ def stereo_conv2d(
         dilation: Tuple[int, int] = (1, 1),
         mask: Optional[Tensor] = None,
         proj_params: proto_gen.detect_pb2.StereoProjectParams = None,
-        projXY2panoXYZFunc: callable = proj.stereo_proj._projXY2panoXYZ,
-        panoXYZ2projXYFunc: callable = proj.stereo_proj._panoXYZ2projXY,
         thetaRate: float = 1.0,  # 默认 detTheta = proj_theta / proj_size, 可调整 detTheta = detTheta * thetaRate
         cache_dir: str = '/tmp/cache/pano_detect/stereo_conv_offset',
 ):
@@ -205,7 +199,6 @@ def stereo_conv2d(
                     kernel_height=kernel_height, kernel_width=kernel_width,
                     dil_h=dil_h, dil_w=dil_w,
                     proj_params=proj_params,
-                    projXY2panoXYZFunc=projXY2panoXYZFunc, panoXYZ2projXYFunc=panoXYZ2projXYFunc,
                     thetaRate=thetaRate,
                     device=input.device, dtype=input.dtype,
                 )
@@ -255,8 +248,6 @@ class StereoConv2d(nn.Module):
             bias: bool = True,
             proj_params: proto_gen.detect_pb2.StereoProjectParams = proto_gen.detect_pb2.StereoProjectParams(
                 project_dis=1, project_size=3),
-            projXY2panoXYZFunc: callable = proj.stereo_proj._projXY2panoXYZ,
-            panoXYZ2projXYFunc: callable = proj.stereo_proj._panoXYZ2projXY,
             thetaRate: float = 1.0,  # 默认 detTheta = proj_theta / proj_size, 可调整 detTheta = detTheta * thetaRate
     ):
         super(StereoConv2d, self).__init__()
@@ -285,8 +276,6 @@ class StereoConv2d(nn.Module):
         self.reset_parameters()
 
         self.proj_params = proj_params
-        self.projXY2panoXYZFunc = projXY2panoXYZFunc
-        self.panoXYZ2projXYFunc = panoXYZ2projXYFunc
         self.thetaRate = thetaRate
 
     def reset_parameters(self) -> None:
@@ -301,7 +290,6 @@ class StereoConv2d(nn.Module):
         return stereo_conv2d(input, self.weight, self.bias, stride=self.stride,
                              padding=self.padding, dilation=self.dilation, mask=None,
                              proj_params=self.proj_params,
-                             projXY2panoXYZFunc=self.projXY2panoXYZFunc, panoXYZ2projXYFunc=self.panoXYZ2projXYFunc,
                              thetaRate=self.thetaRate)
 
 
