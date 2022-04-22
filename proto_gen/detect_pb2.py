@@ -13,6 +13,7 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
+# 将 StereoProjectParams 转换成可以序列化的格式
 class StereoProjectParams(object):
     def __init__(self, project_dis, project_size, theta_rotate=0):
         self.project_dis = project_dis
