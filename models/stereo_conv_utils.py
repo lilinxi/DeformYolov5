@@ -149,7 +149,7 @@ def plot_kernel_offset(proj_req: proto_gen.detect_pb2.StereoProjectRequest):
     cv2.imshow('delta_theta_phi', im)
     cv2.waitKey(0)
 
-
+@profile
 def stereo_conv2d(
         input: Tensor,
         weight: Tensor,
@@ -226,11 +226,14 @@ def stereo_conv2d(
     if not os.path.exists(cache_dir):
         os.makedirs(cache_dir)
     if os.path.exists(cache_file):
+        print(f'load offset from cache: {cache_file}')
         with open(cache_file, 'rb') as f:
             offset = torch.from_numpy(pickle.load(f)).to(input.device).type(input.dtype)
     else:
+        print(f'compute offset and save to cache: {cache_file}')
         offset = compute_offset(offset, bs)
         pickle.dump(offset.cpu().numpy(), open(cache_file, 'wb'))
+        offset = offset.to(input.device).type(input.dtype)
 
     return deform_conv2d(input, offset, weight, bias, stride, padding, dilation, mask)
 

@@ -16,6 +16,7 @@ from torch.nn.common_types import _size_2_t
 from typing import Union
 
 
+@profile
 def equi_conv2d(input, weight, bias=None, stride=(1, 1), padding=(0, 0), dilation=(1, 1),
                 cache_dir: str = '/tmp/cache/pano_detect/equi_conv_offset', ):
     """
@@ -66,6 +67,7 @@ def equi_conv2d(input, weight, bias=None, stride=(1, 1), padding=(0, 0), dilatio
     pano_W = int((in_w + 2 * pad_w - dil_w * (weights_w - 1) - 1) // stride_w + 1)
     pano_H = int((in_h + 2 * pad_h - dil_h * (weights_h - 1) - 1) // stride_h + 1)
 
+    @profile
     def rotation_matrix(axis, theta):
         """
         Return the rotation matrix associated with counterclockwise rotation about
@@ -82,6 +84,7 @@ def equi_conv2d(input, weight, bias=None, stride=(1, 1), padding=(0, 0), dilatio
                             [2 * (bd + ac), 2 * (cd - ab), aa + dd - bb - cc]], device=input.device, dtype=input.dtype)
         return ROT
 
+    @profile
     def equi_coord(pano_W, pano_H, k_W, k_H, u, v):
         fov_w = k_W * math.radians(360. / float(pano_W))
         focal = (float(k_W) / 2) / math.tan(fov_w / 2)
@@ -129,6 +132,7 @@ def equi_conv2d(input, weight, bias=None, stride=(1, 1), padding=(0, 0), dilatio
 
         return offsets_x, offsets_y
 
+    @profile
     def distortion_aware_map(pano_W, pano_H, k_W, k_H, s_width=1, s_height=1, bs=16):
         offset = torch.zeros(2 * k_H * k_W, pano_H, pano_W, device=input.device, dtype=input.dtype)
 
@@ -157,12 +161,15 @@ def equi_conv2d(input, weight, bias=None, stride=(1, 1), padding=(0, 0), dilatio
     if not os.path.exists(cache_dir):
         os.makedirs(cache_dir)
     if os.path.exists(cache_file):
+        print(f'load offset from cache: {cache_file}')
         with open(cache_file, 'rb') as f:
             offset = torch.from_numpy(pickle.load(f)).to(input.device).type(input.dtype)
     else:
+        print(f'compute offset and save to cache: {cache_file}')
         offset = distortion_aware_map(pano_W, pano_H, weights_w, weights_h,
                                       s_width=stride_w, s_height=stride_h, bs=bs)
         pickle.dump(offset.cpu().numpy(), open(cache_file, 'wb'))
+        offset = offset.to(input.device).type(input.dtype)
 
     return deform_conv2d(input, offset, weight, bias=bias, stride=stride, padding=padding, dilation=dilation)
 
