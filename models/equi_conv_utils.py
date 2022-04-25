@@ -133,8 +133,8 @@ def equi_conv2d(input, weight, bias=None, stride=(1, 1), padding=(0, 0), dilatio
         offset = torch.zeros(2 * k_H * k_W, pano_H, pano_W, device=input.device, dtype=input.dtype)
 
         for v in range(0, pano_H, s_height):
+            print('computing', v)
             for u in range(0, pano_W, s_width):
-                print(v, u)
                 offsets_x, offsets_y = equi_coord(pano_W, pano_H, k_W, k_H, u, v)
                 offsets = torch.cat((torch.unsqueeze(offsets_y, -1), torch.unsqueeze(offsets_x, -1)), dim=-1)
                 total_offsets = offsets.flatten()
@@ -170,7 +170,9 @@ def equi_conv2d(input, weight, bias=None, stride=(1, 1), padding=(0, 0), dilatio
         offset = offset.to(input.device).type(input.dtype)
         print(f'compute offset finished: {cache_file}')
 
-    return deform_conv2d(input, offset, weight, bias=bias, stride=stride, padding=padding, dilation=dilation)
+    ret = deform_conv2d(input, offset, weight, bias=bias, stride=stride, padding=padding, dilation=dilation)
+    print(f'deform_conv2d finished: {cache_file}')
+    return ret
 
 
 class EquiConv2d(nn.Module):
