@@ -207,6 +207,7 @@ def stereo_conv2d(
                 offsets = torch.cat((torch.unsqueeze(offsets_y, -1), torch.unsqueeze(offsets_x, -1)), dim=-1)
                 total_offsets = offsets.flatten()
                 offset[:, dh, dw] = total_offsets
+                del offsets_x, offsets_y, offsets, total_offsets
         offset = torch.unsqueeze(offset, 0)
         offset = torch.cat([offset for _ in range(bs)], dim=0)
         offset.requires_grad_(False)
@@ -241,6 +242,7 @@ def stereo_conv2d(
 
     ret = deform_conv2d(input, offset, weight, bias=bias, stride=stride, padding=padding, dilation=dilation)
     print(f'deform_conv2d finished: {cache_file}')
+    del offset
     return ret
 
 
