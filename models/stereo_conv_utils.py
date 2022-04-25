@@ -149,7 +149,6 @@ def plot_kernel_offset(proj_req: proto_gen.detect_pb2.StereoProjectRequest):
     cv2.imshow('delta_theta_phi', im)
     cv2.waitKey(0)
 
-@profile
 def stereo_conv2d(
         input: Tensor,
         weight: Tensor,
