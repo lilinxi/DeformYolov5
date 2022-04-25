@@ -152,13 +152,21 @@ def equi_conv2d(input, weight, bias=None, stride=(1, 1), padding=(0, 0), dilatio
         return offset
 
     offset_index_tuple = (
+        pano_W, pano_H,
+        weights_w.item(), weights_h.item(),
+        stride_w, stride_h,
+        bs.item(),
+    )
+
+    offset_index_tuple = (
         bs,
         pano_W, pano_H,
         weights_w, weights_h,
         stride_w, stride_h,
-        bs,
+        bs,  # TODO 多了一个bs，因为cache先不删除
     )
     offset_index = pickle.dumps(offset_index_tuple)
+    print(f'offset: {offset_index}, {offset_index_tuple}')
     offset_index = hashlib.sha256(offset_index).hexdigest()
     cache_file = os.path.join(cache_dir, offset_index)
     print(f'offset: {cache_file}, {offset_index_tuple}')
@@ -307,3 +315,9 @@ if __name__ == '__main__':
     M = EquiConv2d(in_channels=1, out_channels=1, kernel_size=3, padding=1, bias=False)
     out = M(x)
     print(out.shape)
+
+    a = (torch.tensor(1), 320, 320, torch.tensor(6), torch.tensor(6), 2, 2, torch.tensor(1))
+    for i in range(10):
+        offset_index = pickle.dumps(a)
+        offset_index = hashlib.sha256(offset_index).hexdigest()
+        print(offset_index)
