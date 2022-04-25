@@ -134,6 +134,7 @@ def equi_conv2d(input, weight, bias=None, stride=(1, 1), padding=(0, 0), dilatio
 
         for v in range(0, pano_H, s_height):
             for u in range(0, pano_W, s_width):
+                print(v, u)
                 offsets_x, offsets_y = equi_coord(pano_W, pano_H, k_W, k_H, u, v)
                 offsets = torch.cat((torch.unsqueeze(offsets_y, -1), torch.unsqueeze(offsets_x, -1)), dim=-1)
                 total_offsets = offsets.flatten()
@@ -154,6 +155,7 @@ def equi_conv2d(input, weight, bias=None, stride=(1, 1), padding=(0, 0), dilatio
     offset_index = pickle.dumps(offset_index_tuple)
     offset_index = hashlib.sha256(offset_index).hexdigest()
     cache_file = os.path.join(cache_dir, offset_index)
+    print(f'offset: {cache_file}, {offset_index_tuple}')
     if not os.path.exists(cache_dir):
         os.makedirs(cache_dir)
     if os.path.exists(cache_file):
@@ -166,6 +168,7 @@ def equi_conv2d(input, weight, bias=None, stride=(1, 1), padding=(0, 0), dilatio
                                       s_width=stride_w, s_height=stride_h, bs=bs)
         pickle.dump(offset.cpu().numpy(), open(cache_file, 'wb'))
         offset = offset.to(input.device).type(input.dtype)
+        print(f'compute offset finished: {cache_file}')
 
     return deform_conv2d(input, offset, weight, bias=bias, stride=stride, padding=padding, dilation=dilation)
 
