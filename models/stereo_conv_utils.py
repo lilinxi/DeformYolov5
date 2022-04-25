@@ -214,9 +214,10 @@ def stereo_conv2d(
         return offset
 
     offset_index = f'{bs}, {in_h}, {in_w}, {kernel_height}, {kernel_width}, {stride_h}, {stride_w}, {pad_h}, {pad_w}, {dil_h}, {dil_w}, {proj_params.SerializeToString()}, {thetaRate}'
+    print(f'offset: {offset_index}')
     offset_index = hashlib.sha256(offset_index.encode('utf-8')).hexdigest()
     cache_file = os.path.join(cache_dir, offset_index)
-    print(f'offset: {cache_file}, {offset_index}')
+    print(f'offset: {cache_file}')
     if not os.path.exists(cache_dir):
         os.makedirs(cache_dir)
     if os.path.exists(cache_file):
