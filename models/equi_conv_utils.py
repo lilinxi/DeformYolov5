@@ -127,6 +127,8 @@ def equi_conv2d(input, weight, bias=None, stride=(1, 1), padding=(0, 0), dilatio
         offsets_x = (new_roi_x - roi_x)
         offsets_y = (new_roi_y - roi_y)
 
+        del ROT
+
         return offsets_x, offsets_y
 
     def distortion_aware_map(pano_W, pano_H, k_W, k_H, s_width=1, s_height=1, bs=16):
@@ -139,6 +141,10 @@ def equi_conv2d(input, weight, bias=None, stride=(1, 1), padding=(0, 0), dilatio
                 offsets = torch.cat((torch.unsqueeze(offsets_y, -1), torch.unsqueeze(offsets_x, -1)), dim=-1)
                 total_offsets = offsets.flatten()
                 offset[:, v, u] = total_offsets
+                del offsets_x
+                del offsets_y
+                del offsets
+                del total_offsets
 
         offset = torch.unsqueeze(offset, 0)
         offset = torch.cat([offset for _ in range(bs)], dim=0)
@@ -172,6 +178,7 @@ def equi_conv2d(input, weight, bias=None, stride=(1, 1), padding=(0, 0), dilatio
 
     ret = deform_conv2d(input, offset, weight, bias=bias, stride=stride, padding=padding, dilation=dilation)
     print(f'deform_conv2d finished: {cache_file}')
+    del offset
     return ret
 
 
