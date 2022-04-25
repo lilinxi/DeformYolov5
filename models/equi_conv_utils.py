@@ -304,13 +304,20 @@ def demo2():
 
 
 if __name__ == '__main__':
-    x = torch.rand(1, 1, 256, 256)
-    M = EquiConv2d(in_channels=1, out_channels=1, kernel_size=3, padding=1, bias=False)
-    out = M(x)
-    print(out.shape)
+    # x = torch.rand(1, 1, 256, 256)
+    # M = EquiConv2d(in_channels=1, out_channels=1, kernel_size=3, padding=1, bias=False)
+    # out = M(x)
+    # print(out.shape)
 
-    a = (torch.tensor(1), 320, 320, torch.tensor(6), torch.tensor(6), 2, 2, torch.tensor(1))
-    for i in range(10):
-        offset_index = pickle.dumps(a)
-        offset_index = hashlib.sha256(offset_index).hexdigest()
-        print(offset_index)
+
+
+    print(a1 == a2)
+    print(hashlib.md5(a1).hexdigest())
+    print(hashlib.md5(a2).hexdigest())
+    # a = (torch.tensor(1), torch.tensor(40), torch.tensor(40), torch.tensor(3), torch.tensor(3), 2, 2, 1, 1, 1, 1,
+    #      'project_dis: 1.000000, project_size: 3.000000, theta_rotate: 0.000000', 1.0)
+    # for i in range(10):
+    #     offset_index = pickle.dumps(a)
+    #     print(offset_index)
+    #     offset_index = hashlib.md5(offset_index).hexdigest()
+    #     print(offset_index)
