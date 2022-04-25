@@ -65,7 +65,8 @@ def compute_kernel_offset(
             offset_phi = center_phi + raw_kernel_h * delta_phi
 
             offset_x, offset_y, offset_z = proj.transform.theta_phi2xyz(offset_theta, offset_phi)
-            offset_X, offset_Y, _ = proj.stereo_proj._panoXYZ2projXY(offset_x, offset_y, offset_z, proj_params=proj_params)
+            offset_X, offset_Y, _ = proj.stereo_proj._panoXYZ2projXY(offset_x, offset_y, offset_z,
+                                                                     proj_params=proj_params)
 
             if absolute:  # 绝对偏移量，相对于中心
                 kernel_offset_x[i, j] = (offset_X - output_X_normal) * out_width
@@ -149,6 +150,7 @@ def plot_kernel_offset(proj_req: proto_gen.detect_pb2.StereoProjectRequest):
     cv2.imshow('delta_theta_phi', im)
     cv2.waitKey(0)
 
+
 def stereo_conv2d(
         input: Tensor,
         weight: Tensor,
@@ -189,6 +191,7 @@ def stereo_conv2d(
 
     def compute_offset(offset, bs):
         for dh in range(0, out_height, stride_h):
+            print('computing offset for dh:', dh)
             for dw in range(0, out_width, stride_w):
                 logging.debug(f'{dh}, {dw}')
                 offsets_x, offsets_y = compute_kernel_offset(
@@ -222,6 +225,7 @@ def stereo_conv2d(
     offset_index = pickle.dumps(offset_index_tuple)
     offset_index = hashlib.sha256(offset_index).hexdigest()
     cache_file = os.path.join(cache_dir, offset_index)
+    print(f'offset: {cache_file}, {offset_index_tuple}')
     if not os.path.exists(cache_dir):
         os.makedirs(cache_dir)
     if os.path.exists(cache_file):
@@ -233,8 +237,11 @@ def stereo_conv2d(
         offset = compute_offset(offset, bs)
         pickle.dump(offset.cpu().numpy(), open(cache_file, 'wb'))
         offset = offset.to(input.device).type(input.dtype)
+        print(f'compute offset finished: {cache_file}')
 
-    return deform_conv2d(input, offset, weight, bias, stride, padding, dilation, mask)
+    ret = deform_conv2d(input, offset, weight, bias=bias, stride=stride, padding=padding, dilation=dilation)
+    print(f'deform_conv2d finished: {cache_file}')
+    return ret
 
 
 class StereoConv2d(nn.Module):
