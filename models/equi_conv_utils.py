@@ -151,18 +151,11 @@ def equi_conv2d(input, weight, bias=None, stride=(1, 1), padding=(0, 0), dilatio
         offset.requires_grad_(False)
         return offset
 
-    offset_index_tuple = (
-        bs,
-        pano_W, pano_H,
-        weights_w, weights_h,
-        stride_w, stride_h,
-        bs,  # TODO 多了一个bs，因为cache先不删除
-    )
-    offset_index = pickle.dumps(offset_index_tuple)
-    print(f'offset: {offset_index}, {offset_index_tuple}')
-    offset_index = hashlib.sha256(offset_index).hexdigest()
+    offset_index = f'{bs}, {in_h}, {in_w}, {weights_h}, {weights_w}, {stride_h}, {stride_w}, {pad_h}, {pad_w}, {dil_h}, {dil_w}'
+    print(f'offset: {offset_index}')
+    offset_index = hashlib.sha256(offset_index.encode('utf-8')).hexdigest()
     cache_file = os.path.join(cache_dir, offset_index)
-    print(f'offset: {cache_file}, {offset_index_tuple}')
+    print(f'offset: {cache_file}')
     if not os.path.exists(cache_dir):
         os.makedirs(cache_dir)
     if os.path.exists(cache_file):
