@@ -153,8 +153,8 @@ def equi_conv2d(input, weight, bias=None, stride=(1, 1), padding=(0, 0), dilatio
 
     offset_index_tuple = (
         pano_W, pano_H,
-        weights_w.item(), weights_h.item(),
-        stride_w, stride_h,
+        weights_w, weights_h,
+        stride_w.item(), stride_h.item(),
         bs.item(),
     )
 
