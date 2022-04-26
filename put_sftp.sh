@@ -18,7 +18,7 @@ put -r ./DeformYolov5Sftp /home/mm
 #put ./yolov5x.pt /home/mm/DeformYolov5Sftp
 EOF
 
-#sftp lab724 << EOF
-#put -r ./DeformYolov5Sftp /home/lmf
+sftp lab724 << EOF
+put -r ./DeformYolov5Sftp /home/lmf
 #put -r ./DeformYolov5/yolov5x.pt /home/lmf/DeformYolov5Sftp
-#EOF
+EOF
