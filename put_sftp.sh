@@ -13,10 +13,10 @@ cd ..
 #rm -rf ./DeformYolov5Sftp
 #git clone git@github.com:lilinxi/DeformYolov5.git DeformYolov5Sftp
 
-sftp lab << EOF
-put -r ./DeformYolov5Sftp /home/mm
+#sftp lab << EOF
+#put -r ./DeformYolov5Sftp /home/mm
 #put ./yolov5x.pt /home/mm/DeformYolov5Sftp
-EOF
+#EOF
 
 sftp lab724 << EOF
 put -r ./DeformYolov5Sftp /home/lmf
