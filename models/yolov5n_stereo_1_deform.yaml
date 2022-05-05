@@ -19,7 +19,7 @@ backbone:
    [-1, 6, DeformC3, [256]],
    [-1, 1, DeformConvV1_TorchVision, [512, 3, 2]],  # 5-P4/16
    [-1, 9, DeformC3, [512]],
-   [-1, 1, DeformConvV1_TorchVision, [1024, 3, 2]],  # 7-P5/32
+   [-1, 1, StereoConv, [1024, 3, 2]],  # 7-P5/32
    [-1, 3, DeformC3, [1024]],
    [-1, 1, SPPF, [1024, 5]],  # 9
   ]
