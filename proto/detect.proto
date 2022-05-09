@@ -77,12 +77,12 @@ message ProjectResponse {
   repeated DatasetModel proj_dataset_model_list = 1;
 }
 
-message StereoProjectParams{
-  // 单位球，R 取值为 1
-  double project_dis = 1; // 投影图与球心的距离，与 R 的倍数，取值范围【1，+oo）
-  double project_size = 2; // 投影图与球面相切时，投影正方形与 R 的倍数，取值范围（0，+oo）
-  double theta_rotate = 3; // 全景图投影前的水平旋转角度，取值范围【0，2pi）
-}
+//message StereoProjectParams{
+//  // 单位球，R 取值为 1
+//  double project_dis = 1; // 投影图与球心的距离，与 R 的倍数，取值范围【1，+oo）
+//  double project_size = 2; // 投影图与球面相切时，投影正方形与 R 的倍数，取值范围（0，+oo）
+//  double theta_rotate = 3; // 全景图投影前的水平旋转角度，取值范围【0，2pi）
+//}
 
 message StereoProjectRequest {
   // required

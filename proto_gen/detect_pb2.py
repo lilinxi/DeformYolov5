@@ -89,12 +89,12 @@ ProjectResponse = _reflection.GeneratedProtocolMessageType('ProjectResponse', (_
 })
 _sym_db.RegisterMessage(ProjectResponse)
 
-StereoProjectParams = _reflection.GeneratedProtocolMessageType('StereoProjectParams', (_message.Message,), {
-    'DESCRIPTOR': _STEREOPROJECTPARAMS,
-    '__module__': 'detect_pb2'
-    # @@protoc_insertion_point(class_scope:pano_detection.StereoProjectParams)
-})
-_sym_db.RegisterMessage(StereoProjectParams)
+# StereoProjectParams = _reflection.GeneratedProtocolMessageType('StereoProjectParams', (_message.Message,), {
+#     'DESCRIPTOR': _STEREOPROJECTPARAMS,
+#     '__module__': 'detect_pb2'
+#     # @@protoc_insertion_point(class_scope:pano_detection.StereoProjectParams)
+# })
+# _sym_db.RegisterMessage(StereoProjectParams)
 
 StereoProjectRequest = _reflection.GeneratedProtocolMessageType('StereoProjectRequest', (_message.Message,), {
     'DESCRIPTOR': _STEREOPROJECTREQUEST,
