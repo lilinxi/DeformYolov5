@@ -78,77 +78,77 @@ def compute_kernel_offset(
     return kernel_offset_x, kernel_offset_y
 
 
-# 可视化立体卷积核
-def plot_kernel_offset(proj_req: proto_gen.detect_pb2.StereoProjectRequest):
-    im_raw = cv2.imread(proj_req.project_request.pano_dataset_model.image_path)  # BGR
-    im = proj.stereo_proj.stereo_proj(im_raw, proj_req.project_params_list[0],
-                                      proj_req.project_request.project_width, proj_req.project_request.project_height)
-    X = proj_req.project_params_list[0].project_size * 1 / 9
-    Y = proj_req.project_params_list[0].project_size * 1 / 9
-
-    pX = X * proj_req.project_request.project_width / proj_req.project_params_list[0].project_size
-    pY = Y * proj_req.project_request.project_height / proj_req.project_params_list[0].project_size
-
-    demo_kernel_x, demo_kernel_y = compute_kernel_offset(
-        output_X_normal=X, output_Y_normal=Y,
-        out_width=proj_req.project_request.project_width, out_height=proj_req.project_request.project_height,
-        kernel_height=7, kernel_width=7,
-        dil_h=1, dil_w=1,
-        proj_params=proj_req.project_params_list[0],
-        thetaRate=5.0,
-        device='cpu', dtype=torch.float32,
-        absolute=True,
-    )
-    for i in range(49):
-        x = demo_kernel_x.flatten()[i]
-        y = demo_kernel_y.flatten()[i]
-        px = round(pX + x.item())
-        py = round(pY + y.item())
-        print(pX, '+', x.item(), '=', px, '\t', pY, '+', y.item(), '=', py)
-        cv2.circle(im, (px, py), 3, (0, 255, 0), -1)
-    print("===========================================")
-
-    demo_kernel_x, demo_kernel_y = compute_kernel_offset(
-        output_X_normal=X, output_Y_normal=Y,
-        out_width=proj_req.project_request.project_width, out_height=proj_req.project_request.project_height,
-        kernel_height=3, kernel_width=3,
-        dil_h=2, dil_w=2,
-        proj_params=proj_req.project_params_list[0],
-        thetaRate=1.0,
-        device='cpu', dtype=torch.float32,
-        absolute=True,
-    )
-    for i in range(3 * 3):
-        x = demo_kernel_x.flatten()[i]
-        y = demo_kernel_y.flatten()[i]
-        px = round(pX + x.item())
-        py = round(pY + y.item())
-        print(pX, '+', x.item(), '=', px, '\t', pY, '+', y.item(), '=', py)
-        cv2.circle(im, (px, py), 3, (0, 0, 255), -1)
-    print("===========================================")
-
-    demo_kernel_x, demo_kernel_y = compute_kernel_offset(
-        output_X_normal=X, output_Y_normal=Y,
-        out_width=proj_req.project_request.project_width, out_height=proj_req.project_request.project_height,
-        kernel_height=3, kernel_width=3,
-        dil_h=3, dil_w=3,
-        proj_params=proj_req.project_params_list[0],
-        thetaRate=1.0,
-        device='cpu', dtype=torch.float32,
-        absolute=True,
-    )
-    for i in range(3 * 3):
-        x = demo_kernel_x.flatten()[i]
-        y = demo_kernel_y.flatten()[i]
-        px = round(pX + x.item())
-        py = round(pY + y.item())
-        print(pX, '+', x.item(), '=', px, '\t', pY, '+', y.item(), '=', py)
-        cv2.circle(im, (px, py), 3, (255, 0, 0), -1)
-    print("===========================================")
-
-    cv2.imshow('im_raw', im_raw)
-    cv2.imshow('delta_theta_phi', im)
-    cv2.waitKey(0)
+# # 可视化立体卷积核
+# def plot_kernel_offset(proj_req: proto_gen.detect_pb2.StereoProjectRequest):
+#     im_raw = cv2.imread(proj_req.project_request.pano_dataset_model.image_path)  # BGR
+#     im = proj.stereo_proj.stereo_proj(im_raw, proj_req.project_params_list[0],
+#                                       proj_req.project_request.project_width, proj_req.project_request.project_height)
+#     X = proj_req.project_params_list[0].project_size * 1 / 9
+#     Y = proj_req.project_params_list[0].project_size * 1 / 9
+#
+#     pX = X * proj_req.project_request.project_width / proj_req.project_params_list[0].project_size
+#     pY = Y * proj_req.project_request.project_height / proj_req.project_params_list[0].project_size
+#
+#     demo_kernel_x, demo_kernel_y = compute_kernel_offset(
+#         output_X_normal=X, output_Y_normal=Y,
+#         out_width=proj_req.project_request.project_width, out_height=proj_req.project_request.project_height,
+#         kernel_height=7, kernel_width=7,
+#         dil_h=1, dil_w=1,
+#         proj_params=proj_req.project_params_list[0],
+#         thetaRate=5.0,
+#         device='cpu', dtype=torch.float32,
+#         absolute=True,
+#     )
+#     for i in range(49):
+#         x = demo_kernel_x.flatten()[i]
+#         y = demo_kernel_y.flatten()[i]
+#         px = round(pX + x.item())
+#         py = round(pY + y.item())
+#         print(pX, '+', x.item(), '=', px, '\t', pY, '+', y.item(), '=', py)
+#         cv2.circle(im, (px, py), 3, (0, 255, 0), -1)
+#     print("===========================================")
+#
+#     demo_kernel_x, demo_kernel_y = compute_kernel_offset(
+#         output_X_normal=X, output_Y_normal=Y,
+#         out_width=proj_req.project_request.project_width, out_height=proj_req.project_request.project_height,
+#         kernel_height=3, kernel_width=3,
+#         dil_h=2, dil_w=2,
+#         proj_params=proj_req.project_params_list[0],
+#         thetaRate=1.0,
+#         device='cpu', dtype=torch.float32,
+#         absolute=True,
+#     )
+#     for i in range(3 * 3):
+#         x = demo_kernel_x.flatten()[i]
+#         y = demo_kernel_y.flatten()[i]
+#         px = round(pX + x.item())
+#         py = round(pY + y.item())
+#         print(pX, '+', x.item(), '=', px, '\t', pY, '+', y.item(), '=', py)
+#         cv2.circle(im, (px, py), 3, (0, 0, 255), -1)
+#     print("===========================================")
+#
+#     demo_kernel_x, demo_kernel_y = compute_kernel_offset(
+#         output_X_normal=X, output_Y_normal=Y,
+#         out_width=proj_req.project_request.project_width, out_height=proj_req.project_request.project_height,
+#         kernel_height=3, kernel_width=3,
+#         dil_h=3, dil_w=3,
+#         proj_params=proj_req.project_params_list[0],
+#         thetaRate=1.0,
+#         device='cpu', dtype=torch.float32,
+#         absolute=True,
+#     )
+#     for i in range(3 * 3):
+#         x = demo_kernel_x.flatten()[i]
+#         y = demo_kernel_y.flatten()[i]
+#         px = round(pX + x.item())
+#         py = round(pY + y.item())
+#         print(pX, '+', x.item(), '=', px, '\t', pY, '+', y.item(), '=', py)
+#         cv2.circle(im, (px, py), 3, (255, 0, 0), -1)
+#     print("===========================================")
+#
+#     cv2.imshow('im_raw', im_raw)
+#     cv2.imshow('delta_theta_phi', im)
+#     cv2.waitKey(0)
 
 
 def stereo_conv2d(

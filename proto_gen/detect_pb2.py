@@ -12,7 +12,6 @@ from google.protobuf import symbol_database as _symbol_database
 
 _sym_db = _symbol_database.Default()
 
-
 # 将 StereoProjectParams 转换成可以序列化的格式
 class StereoProjectParams(object):
     def __init__(self, project_dis, project_size, theta_rotate=0):
@@ -27,33 +26,12 @@ class StereoProjectParams(object):
     def SerializeToString(self):
         return self.__str__()
 
-
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
-    b'\n\x0c\x64\x65tect.proto\x12\x0epano_detection\"\xae\x01\n\x0eGroundTruthBBX\x12\x0c\n\x04xmin\x18\x01 \x01(\x03\x12\x0c\n\x04ymin\x18\x02 \x01(\x03\x12\x0c\n\x04xmax\x18\x03 \x01(\x03\x12\x0c\n\x04ymax\x18\x04 \x01(\x03\x12\r\n\x05label\x18\x05 \x01(\x03\x12\x10\n\x08x_center\x18\x32 \x01(\x01\x12\x10\n\x08y_center\x18\x33 \x01(\x01\x12\r\n\x05width\x18\x34 \x01(\x01\x12\x0e\n\x06height\x18\x35 \x01(\x01\x12\x12\n\nlabel_name\x18\x36 \x01(\t\"\x90\x01\n\x0c\x44\x61tasetModel\x12\x12\n\nimage_path\x18\x01 \x01(\t\x12=\n\x15ground_truth_bbx_list\x18\x02 \x03(\x0b\x32\x1e.pano_detection.GroundTruthBBX\x12\x16\n\x0eimage_filename\x18\x32 \x01(\t\x12\x15\n\rimage_ndarray\x18\x33 \x01(\x0c\"w\n\x10YoloModelRequest\x12\x12\n\nimage_path\x18\x01 \x01(\t\x12\x12\n\nimage_size\x18\x02 \x01(\x03\x12\x14\n\x0cweights_path\x18\x04 \x01(\t\x12\x12\n\nconf_thres\x18\x05 \x01(\x01\x12\x11\n\tiou_thres\x18\x06 \x01(\x01\"f\n\x0f\x44\x65tectResultBBX\x12\x0c\n\x04xmin\x18\x01 \x01(\x03\x12\x0c\n\x04ymin\x18\x02 \x01(\x03\x12\x0c\n\x04xmax\x18\x03 \x01(\x03\x12\x0c\n\x04ymax\x18\x04 \x01(\x03\x12\r\n\x05label\x18\x05 \x01(\x03\x12\x0c\n\x04\x63onf\x18\x06 \x01(\x01\"h\n\x11YoloModelResponse\x12\x12\n\nimage_path\x18\x01 \x01(\t\x12?\n\x16\x64\x65tect_result_bbx_list\x18\x02 \x03(\x0b\x32\x1f.pano_detection.DetectResultBBX\"\xa2\x01\n\x0eProjectRequest\x12\x38\n\x12pano_dataset_model\x18\x01 \x01(\x0b\x32\x1c.pano_detection.DatasetModel\x12\x13\n\x0bpano_height\x18\x02 \x01(\x03\x12\x12\n\npano_width\x18\x03 \x01(\x03\x12\x16\n\x0eproject_height\x18\x04 \x01(\x03\x12\x15\n\rproject_width\x18\x05 \x01(\x03\"P\n\x0fProjectResponse\x12=\n\x17proj_dataset_model_list\x18\x01 \x03(\x0b\x32\x1c.pano_detection.DatasetModel\"V\n\x13StereoProjectParams\x12\x13\n\x0bproject_dis\x18\x01 \x01(\x01\x12\x14\n\x0cproject_size\x18\x02 \x01(\x01\x12\x14\n\x0ctheta_rotate\x18\x03 \x01(\x01\"\x91\x01\n\x14StereoProjectRequest\x12\x37\n\x0fproject_request\x18\x01 \x01(\x0b\x32\x1e.pano_detection.ProjectRequest\x12@\n\x13project_params_list\x18\x02 \x03(\x0b\x32#.pano_detection.StereoProjectParams2_\n\x0c\x44\x65\x66ormYolov5\x12O\n\x06\x44\x65tect\x12 .pano_detection.YoloModelRequest\x1a!.pano_detection.YoloModelResponse\"\x00\x62\x06proto3')
+    b'\n\x0c\x64\x65tect.proto\x12\x0epano_detection\"w\n\x10YoloModelRequest\x12\x12\n\nimage_path\x18\x01 \x01(\t\x12\x12\n\nimage_size\x18\x02 \x01(\x03\x12\x14\n\x0cweights_path\x18\x04 \x01(\t\x12\x12\n\nconf_thres\x18\x05 \x01(\x01\x12\x11\n\tiou_thres\x18\x06 \x01(\x01\"f\n\x0f\x44\x65tectResultBBX\x12\x0c\n\x04xmin\x18\x01 \x01(\x03\x12\x0c\n\x04ymin\x18\x02 \x01(\x03\x12\x0c\n\x04xmax\x18\x03 \x01(\x03\x12\x0c\n\x04ymax\x18\x04 \x01(\x03\x12\r\n\x05label\x18\x05 \x01(\x03\x12\x0c\n\x04\x63onf\x18\x06 \x01(\x01\"h\n\x11YoloModelResponse\x12\x12\n\nimage_path\x18\x01 \x01(\t\x12?\n\x16\x64\x65tect_result_bbx_list\x18\x02 \x03(\x0b\x32\x1f.pano_detection.DetectResultBBX2_\n\x0c\x44\x65\x66ormYolov5\x12O\n\x06\x44\x65tect\x12 .pano_detection.YoloModelRequest\x1a!.pano_detection.YoloModelResponse\"\x00\x62\x06proto3')
 
-_GROUNDTRUTHBBX = DESCRIPTOR.message_types_by_name['GroundTruthBBX']
-_DATASETMODEL = DESCRIPTOR.message_types_by_name['DatasetModel']
 _YOLOMODELREQUEST = DESCRIPTOR.message_types_by_name['YoloModelRequest']
 _DETECTRESULTBBX = DESCRIPTOR.message_types_by_name['DetectResultBBX']
 _YOLOMODELRESPONSE = DESCRIPTOR.message_types_by_name['YoloModelResponse']
-_PROJECTREQUEST = DESCRIPTOR.message_types_by_name['ProjectRequest']
-_PROJECTRESPONSE = DESCRIPTOR.message_types_by_name['ProjectResponse']
-_STEREOPROJECTPARAMS = DESCRIPTOR.message_types_by_name['StereoProjectParams']
-_STEREOPROJECTREQUEST = DESCRIPTOR.message_types_by_name['StereoProjectRequest']
-GroundTruthBBX = _reflection.GeneratedProtocolMessageType('GroundTruthBBX', (_message.Message,), {
-    'DESCRIPTOR': _GROUNDTRUTHBBX,
-    '__module__': 'detect_pb2'
-    # @@protoc_insertion_point(class_scope:pano_detection.GroundTruthBBX)
-})
-_sym_db.RegisterMessage(GroundTruthBBX)
-
-DatasetModel = _reflection.GeneratedProtocolMessageType('DatasetModel', (_message.Message,), {
-    'DESCRIPTOR': _DATASETMODEL,
-    '__module__': 'detect_pb2'
-    # @@protoc_insertion_point(class_scope:pano_detection.DatasetModel)
-})
-_sym_db.RegisterMessage(DatasetModel)
-
 YoloModelRequest = _reflection.GeneratedProtocolMessageType('YoloModelRequest', (_message.Message,), {
     'DESCRIPTOR': _YOLOMODELREQUEST,
     '__module__': 'detect_pb2'
@@ -75,55 +53,15 @@ YoloModelResponse = _reflection.GeneratedProtocolMessageType('YoloModelResponse'
 })
 _sym_db.RegisterMessage(YoloModelResponse)
 
-ProjectRequest = _reflection.GeneratedProtocolMessageType('ProjectRequest', (_message.Message,), {
-    'DESCRIPTOR': _PROJECTREQUEST,
-    '__module__': 'detect_pb2'
-    # @@protoc_insertion_point(class_scope:pano_detection.ProjectRequest)
-})
-_sym_db.RegisterMessage(ProjectRequest)
-
-ProjectResponse = _reflection.GeneratedProtocolMessageType('ProjectResponse', (_message.Message,), {
-    'DESCRIPTOR': _PROJECTRESPONSE,
-    '__module__': 'detect_pb2'
-    # @@protoc_insertion_point(class_scope:pano_detection.ProjectResponse)
-})
-_sym_db.RegisterMessage(ProjectResponse)
-
-# StereoProjectParams = _reflection.GeneratedProtocolMessageType('StereoProjectParams', (_message.Message,), {
-#     'DESCRIPTOR': _STEREOPROJECTPARAMS,
-#     '__module__': 'detect_pb2'
-#     # @@protoc_insertion_point(class_scope:pano_detection.StereoProjectParams)
-# })
-# _sym_db.RegisterMessage(StereoProjectParams)
-
-StereoProjectRequest = _reflection.GeneratedProtocolMessageType('StereoProjectRequest', (_message.Message,), {
-    'DESCRIPTOR': _STEREOPROJECTREQUEST,
-    '__module__': 'detect_pb2'
-    # @@protoc_insertion_point(class_scope:pano_detection.StereoProjectRequest)
-})
-_sym_db.RegisterMessage(StereoProjectRequest)
-
 _DEFORMYOLOV5 = DESCRIPTOR.services_by_name['DeformYolov5']
 if _descriptor._USE_C_DESCRIPTORS == False:
     DESCRIPTOR._options = None
-    _GROUNDTRUTHBBX._serialized_start = 33
-    _GROUNDTRUTHBBX._serialized_end = 207
-    _DATASETMODEL._serialized_start = 210
-    _DATASETMODEL._serialized_end = 354
-    _YOLOMODELREQUEST._serialized_start = 356
-    _YOLOMODELREQUEST._serialized_end = 475
-    _DETECTRESULTBBX._serialized_start = 477
-    _DETECTRESULTBBX._serialized_end = 579
-    _YOLOMODELRESPONSE._serialized_start = 581
-    _YOLOMODELRESPONSE._serialized_end = 685
-    _PROJECTREQUEST._serialized_start = 688
-    _PROJECTREQUEST._serialized_end = 850
-    _PROJECTRESPONSE._serialized_start = 852
-    _PROJECTRESPONSE._serialized_end = 932
-    _STEREOPROJECTPARAMS._serialized_start = 934
-    _STEREOPROJECTPARAMS._serialized_end = 1020
-    _STEREOPROJECTREQUEST._serialized_start = 1023
-    _STEREOPROJECTREQUEST._serialized_end = 1168
-    _DEFORMYOLOV5._serialized_start = 1170
-    _DEFORMYOLOV5._serialized_end = 1265
+    _YOLOMODELREQUEST._serialized_start = 32
+    _YOLOMODELREQUEST._serialized_end = 151
+    _DETECTRESULTBBX._serialized_start = 153
+    _DETECTRESULTBBX._serialized_end = 255
+    _YOLOMODELRESPONSE._serialized_start = 257
+    _YOLOMODELRESPONSE._serialized_end = 361
+    _DEFORMYOLOV5._serialized_start = 363
+    _DEFORMYOLOV5._serialized_end = 458
 # @@protoc_insertion_point(module_scope)
