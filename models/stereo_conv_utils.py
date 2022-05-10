@@ -16,7 +16,6 @@ from torchvision.ops.deform_conv import deform_conv2d
 import proto_gen.detect_pb2
 import proj.transform
 import proj.stereo_proj
-import proj.stereo_conv_util
 
 from torch.nn.common_types import _size_2_t
 from typing import Union
