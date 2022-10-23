@@ -29,4 +29,5 @@ def serve():
 
 if __name__ == '__main__':
     logging.basicConfig()
+    logging.info("DeformYolov5 waiting at 50051")
     serve()
